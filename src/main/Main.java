@@ -3,16 +3,22 @@ package main;
 import checker.Checkstyle;
 import checker.Checker;
 import common.Constants;
-import fileio.Input;
-import fileio.InputLoader;
-import fileio.Writer;
+import fileio.*;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import data.User;
+import data.Actor;
+import data.Movie;
+import data.Serial;
+import data.Data;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -71,6 +77,99 @@ public final class Main {
         JSONArray arrayResult = new JSONArray();
 
         //TODO add here the entry point to your implementation
+
+        List<Actor> actors = new ArrayList<>();
+        List<Movie> movies = new ArrayList<>();
+        List<Serial> serials = new ArrayList<>();
+        List<User> users = new ArrayList<>();
+
+        for (ActorInputData actor : input.getActors()) {
+            Actor actor2 = new Actor(actor.getName(), actor.getCareerDescription(), actor.getFilmography(),
+                                     actor.getAwards());
+            actors.add(actor2);
+        }
+
+        for (MovieInputData movie : input.getMovies()) {
+            Movie movie2 = new Movie(movie.getTitle(), movie.getCast(), movie.getGenres(), movie.getYear(),
+                                     movie.getDuration());
+            movies.add(movie2);
+        }
+
+        for (SerialInputData serial : input.getSerials()) {
+            Serial serial2 = new Serial(serial.getTitle(), serial.getCast(), serial.getGenres(),
+                                        serial.getNumberSeason(), serial.getSeasons(), serial.getYear());
+            serials.add(serial2);
+        }
+
+        for (UserInputData user : input.getUsers()) {
+            User user2 = new User(user.getUsername(), user.getSubscriptionType(), user.getHistory(),
+                                  user.getFavoriteMovies());
+            users.add(user2);
+        }
+
+        Data data = new Data(actors, users, movies, serials);
+        JSONObject object;
+
+        for (ActionInputData command : input.getCommands()) {
+            if (command.getActionType().equals("command")) {
+                if (command.getType().equals("favorite")) {
+                    for (User user : data.getUsers()) {
+                        if (user.getUsername().equals(command.getUsername())) {
+                            int result = user.addFavorite(command.getTitle());
+                            if (result == 0) {
+                                object = fileWriter.writeFile(command.getActionId(), "", "error -> "
+                                        + command.getTitle() + " is already in favourite list");
+                            } else if (result == 1) {
+                                object = fileWriter.writeFile(command.getActionId(), "", "error -> "
+                                        + command.getTitle() + " is not seen");
+                            } else {
+                                object = fileWriter.writeFile(command.getActionId(), "", "success -> "
+                                        + command.getTitle() + " was added as favourite");
+                            }
+                            arrayResult.add(object);
+                        }
+                    }
+                } else if (command.getType().equals("view")) {
+                    for (User user : data.getUsers()) {
+                        if (user.getUsername().equals(command.getUsername())) {
+                            int result = user.addView((command.getTitle()));
+                            object = fileWriter.writeFile(command.getActionId(), "", "success -> "
+                                    + command.getTitle() + " was viewed with total views of " + result);
+                            arrayResult.add(object);
+                        }
+                    }
+                } else {
+                    for (User user : data.getUsers()) {
+                        if (user.getUsername().equals(command.getUsername())) {
+                            int result = user.isSeen(command.getTitle());
+                            if (result == 1) {
+                                if (command.getSeasonNumber() == 0) {
+                                    for (Movie movie : data.getMovies()) {
+                                        if (movie.getTitle().equals(command.getTitle())) {
+                                            movie.addRating(command.getGrade());
+                                        }
+                                    }
+                                } else {
+                                    for (Serial serial : data.getSerials()) {
+                                        if (serial.getTitle().equals(command.getTitle())) {
+                                            serial.addRating(command.getGrade(), command.getSeasonNumber());
+                                        }
+                                    }
+                                }
+                                object = fileWriter.writeFile(command.getActionId(), "", "success -> "
+                                        + command.getTitle() + " was rated with " + command.getGrade() + " by "
+                                        + command.getUsername());
+                                user.setNumberOfRatings(user.getNumberOfRatings() + 1);
+                            } else {
+                                object = fileWriter.writeFile(command.getActionId(), "", "error -> "
+                                        + command.getTitle() + " is not seen");
+                            }
+                            arrayResult.add(object);
+                        }
+                    }
+                }
+            }
+        }
 
         fileWriter.closeJSON(arrayResult);
     }
