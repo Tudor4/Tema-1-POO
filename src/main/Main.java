@@ -146,28 +146,96 @@ public final class Main {
                                 if (command.getSeasonNumber() == 0) {
                                     for (Movie movie : data.getMovies()) {
                                         if (movie.getTitle().equals(command.getTitle())) {
-                                            movie.addRating(command.getGrade());
+                                            if (!user.isRated(movie.getTitle())) {
+                                                user.getRatedTitles().add(movie.getTitle());
+                                                movie.addRating(command.getGrade());
+                                                object = fileWriter.writeFile(command.getActionId(), "", "success -> "
+                                                        + command.getTitle() + " was rated with " + command.getGrade() + " by "
+                                                        + command.getUsername());
+                                            } else {
+                                                object = fileWriter.writeFile(command.getActionId(), "", "error -> "
+                                                        + command.getTitle() + " has been already rated");
+                                            }
+                                            arrayResult.add(object);
                                         }
                                     }
                                 } else {
                                     for (Serial serial : data.getSerials()) {
                                         if (serial.getTitle().equals(command.getTitle())) {
-                                            serial.addRating(command.getGrade(), command.getSeasonNumber());
+                                            if (!user.isRated(serial.getTitle() + command.getSeasonNumber())) {
+                                                user.getRatedTitles().add(serial.getTitle() + command.getSeasonNumber());
+                                                serial.addRating(command.getGrade(), command.getSeasonNumber());
+                                                object = fileWriter.writeFile(command.getActionId(), "", "success -> "
+                                                        + command.getTitle() + " was rated with " + command.getGrade() + " by "
+                                                        + command.getUsername());
+                                            } else {
+                                                object = fileWriter.writeFile(command.getActionId(), "", "error -> "
+                                                        + command.getTitle() + " has been already rated");
+                                            }
+                                            arrayResult.add(object);
                                         }
                                     }
                                 }
-                                object = fileWriter.writeFile(command.getActionId(), "", "success -> "
-                                        + command.getTitle() + " was rated with " + command.getGrade() + " by "
-                                        + command.getUsername());
                                 user.setNumberOfRatings(user.getNumberOfRatings() + 1);
                             } else {
                                 object = fileWriter.writeFile(command.getActionId(), "", "error -> "
                                         + command.getTitle() + " is not seen");
+                                arrayResult.add(object);
                             }
-                            arrayResult.add(object);
                         }
                     }
                 }
+            } else if (command.getActionType().equals("query")) {
+                if (command.getObjectType().equals("actors")) {
+                    if (command.getCriteria().equals("average")) {
+                        List<String> result = data.average(command.getNumber(), command.getSortType());
+                        object = fileWriter.writeFile(command.getActionId(), "", "Query result: "
+                                + result);
+                        arrayResult.add(object);
+                    } else if (command.getCriteria().equals("awards")) {
+                        List<String> result = data.awards(command.getFilters().get(3), command.getSortType());
+                        object = fileWriter.writeFile(command.getActionId(), "", "Query result: "
+                                + result);
+                        arrayResult.add(object);
+                    } else {
+                        List<String> result = data.filterDescription(command.getFilters().get(2), command.getSortType());
+                        object = fileWriter.writeFile(command.getActionId(), "", "Query result: "
+                                + result);
+                        arrayResult.add(object);
+                    }
+                } else if (command.getObjectType().equals("users")) {
+                    List<String> result = data.userQuery(command.getNumber(), command.getSortType());
+                    object = fileWriter.writeFile(command.getActionId(), "", "Query result: "
+                            + result);
+                    arrayResult.add(object);
+                } else {
+                    if (command.getCriteria().equals("ratings")) {
+                        List<String> result = data.ratingQuery(command.getNumber(), command.getFilters().get(0),
+                                command.getFilters().get(1), command.getSortType(), command.getObjectType());
+                        object = fileWriter.writeFile(command.getActionId(), "", "Query result: "
+                                + result);
+                        arrayResult.add(object);
+                    } else if (command.getCriteria().equals("favorite")) {
+                        List<String> result = data.favorite(command.getNumber(), command.getFilters().get(0),
+                                command.getFilters().get(1), command.getSortType(), command.getObjectType());
+                        object = fileWriter.writeFile(command.getActionId(), "", "Query result: "
+                                + result);
+                        arrayResult.add(object);
+                    } else if (command.getCriteria().equals("most_viewed")) {
+                        List<String> result = data.mostViewed(command.getNumber(), command.getFilters().get(0),
+                                command.getFilters().get(1), command.getSortType(), command.getObjectType());
+                        object = fileWriter.writeFile(command.getActionId(), "", "Query result: "
+                                + result);
+                        arrayResult.add(object);
+                    } else {
+                        List<String> result = data.longest(command.getNumber(), command.getFilters().get(0),
+                                command.getFilters().get(1), command.getSortType(), command.getObjectType());
+                        object = fileWriter.writeFile(command.getActionId(), "", "Query result: "
+                                + result);
+                        arrayResult.add(object);
+                    }
+                }
+
             }
         }
 

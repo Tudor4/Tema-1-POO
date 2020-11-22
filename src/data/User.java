@@ -15,6 +15,8 @@ public final class User {
 
     private int numberOfRatings;
 
+    private ArrayList<String> ratedTitles;
+
 
     public User(final String username, final String subscriptionType,
                          final Map<String, Integer> history,
@@ -24,6 +26,7 @@ public final class User {
         this.favoriteMovies = favoriteMovies;
         this.history = history;
         this.numberOfRatings = 0;
+        this.ratedTitles = new ArrayList<>();
     }
 
     public String getUsername() {
@@ -41,6 +44,8 @@ public final class User {
     public ArrayList<String> getFavoriteMovies() {
         return favoriteMovies;
     }
+
+    public ArrayList<String> getRatedTitles() { return ratedTitles;}
 
     public int getNumberOfRatings() { return numberOfRatings; }
 
@@ -85,5 +90,12 @@ public final class User {
             return 1;
         }
         return 0;
+    }
+
+    public boolean isRated (String title) {
+        if (ratedTitles.contains(title)) {
+            return true;
+        }
+        return false;
     }
 }
