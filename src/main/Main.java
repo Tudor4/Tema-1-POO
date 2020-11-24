@@ -236,6 +236,58 @@ public final class Main {
                     }
                 }
 
+            } else {
+                if (command.getType().equals("standard")) {
+                    String result = data.standard(command.getUsername());
+                    if (result != null) {
+                        object = fileWriter.writeFile(command.getActionId(), "",
+                                "StandardRecommendation result: " + result);
+                    } else {
+                        object = fileWriter.writeFile(command.getActionId(), "",
+                                "StandardRecommendation cannot be applied!");
+                    }
+                    arrayResult.add(object);
+                } else if (command.getType().equals("best_unseen")) {
+                    String result = data.bestUnseen(command.getUsername());
+                    if (result != null) {
+                        object = fileWriter.writeFile(command.getActionId(), "",
+                                "BestRatedUnseenRecommendation result: " + result);
+                    } else {
+                        object = fileWriter.writeFile(command.getActionId(), "",
+                                "BestRatedUnseenRecommendation cannot be applied!");
+                    }
+                    arrayResult.add(object);
+                } else if (command.getType().equals("popular")) {
+                    String result = data.popular(command.getUsername());
+                    if (result != null) {
+                        object = fileWriter.writeFile(command.getActionId(), "",
+                                "PopularRecommendation result: " + result);
+                    } else {
+                        object = fileWriter.writeFile(command.getActionId(), "",
+                                "PopularRecommendation cannot be applied!");
+                    }
+                    arrayResult.add(object);
+                } else if (command.getType().equals("favorite")) {
+                    String result = data.favoriteRecommendation(command.getUsername());
+                    if (result != null) {
+                        object = fileWriter.writeFile(command.getActionId(), "",
+                                "FavoriteRecommendation result: " + result);
+                    } else {
+                        object = fileWriter.writeFile(command.getActionId(), "",
+                                "FavoriteRecommendation cannot be applied!");
+                    }
+                    arrayResult.add(object);
+                } else {
+                    List<String> result = data.search(command.getUsername(), command.getGenre());
+                    if (result.size() == 0) {
+                        object = fileWriter.writeFile(command.getActionId(), "",
+                                "SearchRecommendation cannot be applied!");
+                    } else {
+                        object = fileWriter.writeFile(command.getActionId(), "",
+                                "SearchRecommendation result: " + result);
+                    }
+                    arrayResult.add(object);
+                }
             }
         }
 

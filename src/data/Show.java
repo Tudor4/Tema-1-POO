@@ -31,4 +31,5 @@ public abstract class Show {
     public final ArrayList<String> getGenres() {
         return genres;
     }
+
 }

@@ -77,10 +77,13 @@ public final class User {
     }
 
     public int addView (String title) {
-        int nrViews = history.getOrDefault(title, 1);
-        if (nrViews != 1) {
+        int nrViews = history.getOrDefault(title, 0);
+        if (nrViews != 0) {
             nrViews++;
             history.replace(title, nrViews);
+        } else {
+            history.put(title, 1);
+            nrViews = 1;
         }
         return nrViews;
     }

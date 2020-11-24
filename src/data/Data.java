@@ -59,7 +59,9 @@ public final class Data {
                     for (Double rating : movie.getRatings()) {
                         movieRatings = movieRatings + rating;
                     }
-                    movieRatings = movieRatings / movie.getRatings().size();
+                    if (movieRatings != 0) {
+                        movieRatings = movieRatings / movie.getRatings().size();
+                    }
                     if (movieRatings != 0) {
                         numberOfVideos++;
                         ratingSum = ratingSum + movieRatings;
@@ -165,8 +167,20 @@ public final class Data {
             boolean ok = true;
             int index = 0;
             while (ok && index < filters.size()) {
-                if (!actor.getCareerDescription().contains(filters.get(index))) {
-                    ok = false;
+                if (!actor.getCareerDescription().toLowerCase().contains(" " + filters.get(index) + " ")) {
+                    if (!actor.getCareerDescription().toLowerCase().contains(" " + filters.get(index) + ".")) {
+                        if (!actor.getCareerDescription().toLowerCase().contains(" " + filters.get(index) + ",")) {
+                            if (!actor.getCareerDescription().toLowerCase().contains("-" + filters.get(index) + " ")) {
+                                ok = false;
+                            } else {
+                                index++;
+                            }
+                        } else {
+                            index++;
+                        }
+                    } else {
+                        index++;
+                    }
                 } else {
                     index++;
                 }
@@ -256,7 +270,7 @@ public final class Data {
                         ratingSum = ratingSum + rating;
                     }
                     if (ratingSum != 0) {
-                        videoRatings.put(movie.getTitle(), ratingSum);
+                        videoRatings.put(movie.getTitle(), ratingSum / movie.getRatings().size());
                     }
                 }
             }
@@ -283,14 +297,19 @@ public final class Data {
                     }
                 }
                 if (ok) {
-                    double ratingSum = 0;
+                    double serialRating = 0;
                     for (Season season : serial.getSeasons()) {
+                        double seasonRating = 0;
                         for (Double rating : season.getRatings()) {
-                            ratingSum = ratingSum + rating;
+                            seasonRating = seasonRating + rating;
                         }
+                        if (seasonRating != 0) {
+                            seasonRating = seasonRating / season.getRatings().size();
+                        }
+                        serialRating = serialRating + seasonRating;
                     }
-                    if (ratingSum != 0) {
-                        videoRatings.put(serial.getTitle(), ratingSum / serial.getNumberSeason());
+                    if (serialRating != 0) {
+                        videoRatings.put(serial.getTitle(), serialRating / serial.getNumberSeason());
                     }
                 }
             }
@@ -328,7 +347,13 @@ public final class Data {
             for (Movie movie : moviesData) {
                 boolean ok = true;
                 int index = 0;
-                while (ok && index < genreFilters.size()) {
+                int size;
+                if(genreFilters.get(0) == null) {
+                    size = 0;
+                } else {
+                    size = genreFilters.size();
+                }
+                while (ok && index < size) {
                     if (!movie.getGenres().contains(genreFilters.get(index))) {
                         ok = false;
                     } else {
@@ -336,7 +361,7 @@ public final class Data {
                     }
                 }
                 ok = false;
-                if (index == genreFilters.size()) {
+                if (index == size) {
                     if (yearFilters.get(0) != null) {
                         int year = Integer.parseInt(yearFilters.get(0));
                         if (year == movie.getYear()) {
@@ -426,7 +451,13 @@ public final class Data {
             for (Movie movie : moviesData) {
                 boolean ok = true;
                 int index = 0;
-                while (ok && index < genreFilters.size()) {
+                int size;
+                if (genreFilters.get(0) == null) {
+                    size = 0;
+                } else {
+                    size = genreFilters.size();
+                }
+                while (ok && index < size) {
                     if (!movie.getGenres().contains(genreFilters.get(index))) {
                         ok = false;
                     } else {
@@ -434,7 +465,7 @@ public final class Data {
                     }
                 }
                 ok = false;
-                if (index == genreFilters.size()) {
+                if (index == size) {
                     if (yearFilters.get(0) != null) {
                         int year = Integer.parseInt(yearFilters.get(0));
                         if (year == movie.getYear()) {
@@ -460,7 +491,13 @@ public final class Data {
             for (Serial serial : serialsData) {
                 boolean ok = true;
                 int index = 0;
-                while (ok && index < genreFilters.size()) {
+                int size;
+                if (genreFilters.get(0) == null) {
+                    size = 0;
+                } else {
+                    size = genreFilters.size();
+                }
+                while (ok && index < size) {
                     if (!serial.getGenres().contains(genreFilters.get(index))) {
                         ok = false;
                     } else {
@@ -468,7 +505,7 @@ public final class Data {
                     }
                 }
                 ok = false;
-                if (index == genreFilters.size()) {
+                if (index == size) {
                     if (yearFilters.get(0) != null) {
                         int year = Integer.parseInt(yearFilters.get(0));
                         if (year == serial.getYear()) {
@@ -524,7 +561,13 @@ public final class Data {
             for (Movie movie : moviesData) {
                 boolean ok = true;
                 int index = 0;
-                while (ok && index < genreFilters.size()) {
+                int size;
+                if (genreFilters.get(0) == null) {
+                    size = 0;
+                } else {
+                    size = genreFilters.size();
+                }
+                while (ok && index < size) {
                     if (!movie.getGenres().contains(genreFilters.get(index))) {
                         ok = false;
                     } else {
@@ -532,7 +575,7 @@ public final class Data {
                     }
                 }
                 ok = false;
-                if (index == genreFilters.size()) {
+                if (index == size) {
                     if (yearFilters.get(0) != null) {
                         int year = Integer.parseInt(yearFilters.get(0));
                         if (year == movie.getYear()) {
@@ -550,7 +593,13 @@ public final class Data {
             for (Serial serial : serialsData) {
                 boolean ok = true;
                 int index = 0;
-                while (ok && index < genreFilters.size()) {
+                int size;
+                if (genreFilters.get(0) == null) {
+                    size = 0;
+                } else {
+                    size = genreFilters.size();
+                }
+                while (ok && index < size) {
                     if (!serial.getGenres().contains(genreFilters.get(index))) {
                         ok = false;
                     } else {
@@ -558,7 +607,7 @@ public final class Data {
                     }
                 }
                 ok = false;
-                if (index == genreFilters.size()) {
+                if (index == size) {
                     if (yearFilters.get(0) != null) {
                         int year = Integer.parseInt(yearFilters.get(0));
                         if (year == serial.getYear()) {
@@ -598,6 +647,265 @@ public final class Data {
                 partialResult.remove(index);
                 index--;
                 number--;
+            }
+        }
+        return result;
+    }
+
+    public String standard (String username) {
+        String result = null;
+        for (User user : usersData) {
+            if (user.getUsername().equals(username)) {
+                for (Movie movie : moviesData) {
+                    if (!user.getHistory().containsKey(movie.getTitle())) {
+                        result = movie.getTitle();
+                        return result;
+                    }
+                }
+                for (Serial serial : serialsData) {
+                    if (!user.getHistory().containsKey(serial.getTitle())) {
+                        result = serial.getTitle();
+                        return result;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    public String bestUnseen (String username) {
+        String result = null;
+        HashMap<String, Double> videoRatings = new HashMap<>();
+        List<String> zeroRating = new ArrayList<>();
+        for (Movie movie : moviesData) {
+            double movieRating = 0;
+            for (Double rating : movie.getRatings()) {
+                movieRating += rating;
+            }
+            if (movieRating != 0) {
+                movieRating /= movie.getRatings().size();
+            }
+            if (movieRating != 0 ) {
+                videoRatings.put(movie.getTitle(), movieRating);
+            } else {
+                zeroRating.add(movie.getTitle());
+            }
+        }
+        for (Serial serial : serialsData) {
+            double serialRating = 0;
+            for (Season season : serial.getSeasons()) {
+                double seasonRating = 0;
+                for (double rating : season.getRatings()) {
+                    seasonRating += rating;
+                }
+                if (seasonRating != 0) {
+                    seasonRating /= season.getRatings().size();
+                }
+                serialRating += seasonRating;
+            }
+            if (serialRating != 0) {
+                videoRatings.put(serial.getTitle(), serialRating / serial.getNumberSeason());
+            } else {
+                zeroRating.add(serial.getTitle());
+            }
+        }
+        Map<String, Double> sortedRatings = videoRatings.entrySet().stream().sorted(Map.Entry.comparingByValue()).collect
+                (Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new ));
+        List<String> sortedVideos = new ArrayList<>();
+        for(Map.Entry<String, Double> entry : sortedRatings.entrySet()) {
+            sortedVideos.add(entry.getKey());
+        }
+        for(String title : zeroRating) {
+            sortedVideos.add(0, title);
+        }
+        for (User user : usersData) {
+            if (user.getUsername().equals(username)) {
+                int index = sortedVideos.size() - 1;
+                while (index != -1) {
+                    if(!user.getHistory().containsKey(sortedVideos.get(index))) {
+                        result = sortedVideos.get(index);
+                        return result;
+                    }
+                    index --;
+                }
+            }
+        }
+        return result;
+    }
+
+    public String popular(String username) {
+        String result = null;
+        HashMap<String, Integer> popularGenres = new HashMap<>();
+        for (User user : usersData) {
+            for (Map.Entry<String, Integer> entry : user.getHistory().entrySet()) {
+                for (Movie movie : moviesData) {
+                    if (movie.getTitle().equals(entry.getKey())) {
+                        for (String genre : movie.getGenres()) {
+                            if (!popularGenres.containsKey(genre)) {
+                                popularGenres.put(genre, entry.getValue());
+                            } else {
+                                int value = popularGenres.get(genre);
+                                value += entry.getValue();
+                                popularGenres.put(genre, value);
+                            }
+                        }
+                    }
+                }
+                for (Serial serial : serialsData) {
+                    if (serial.getTitle().equals(entry.getKey())) {
+                        for (String genre : serial.getGenres()) {
+                            if (!popularGenres.containsKey(genre)) {
+                                popularGenres.put(genre, entry.getValue());
+                            } else {
+                                int value = popularGenres.get(genre);
+                                value += entry.getValue();
+                                popularGenres.put(genre, value);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        Map<String, Integer> sortedGenres = popularGenres.entrySet().stream().sorted(Map.Entry.comparingByValue()).collect
+                (Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new ));
+        List<String> genres = new ArrayList<>();
+        for(Map.Entry<String, Integer> entry : sortedGenres.entrySet()) {
+            genres.add(entry.getKey());
+        }
+        for (User user : usersData) {
+            if (user.getUsername().equals(username)) {
+                if (user.getSubscriptionType().equals("BASIC")) {
+                    return result;
+                } else {
+                    int index = genres.size() - 1;
+                    while (index != - 1) {
+                        for (Movie movie : moviesData) {
+                            if (movie.getGenres().contains(genres.get(index))) {
+                                if(!user.getHistory().containsKey(movie.getTitle())) {
+                                    result = movie.getTitle();
+                                    return result;
+                                }
+                            }
+                        }
+                        for (Serial serial : serialsData) {
+                            if (serial.getGenres().contains(genres.get(index))) {
+                                if(!user.getHistory().containsKey(serial.getTitle())) {
+                                    result = serial.getTitle();
+                                    return result;
+                                }
+                            }
+                        }
+                        index --;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    public String favoriteRecommendation (String username) {
+        String result = null;
+        LinkedHashMap<String, Integer> favoriteVideos = new LinkedHashMap<>();
+        List<String> titles = new ArrayList<>();
+        List<Integer> values = new ArrayList<>();
+        for (Movie movie : moviesData) {
+            int nrFavorites = 0;
+            for (User user : usersData) {
+                if(user.getFavoriteMovies().contains(movie.getTitle())) {
+                    nrFavorites++;
+                }
+            }
+            titles.add(movie.getTitle());
+            values.add(nrFavorites);
+        }
+        for (Serial serial : serialsData) {
+            int nrFavorites = 0;
+            for (User user : usersData) {
+                if (user.getFavoriteMovies().contains(serial.getTitle())) {
+                    nrFavorites++;
+                }
+            }
+            titles.add(serial.getTitle());
+            values.add(nrFavorites);
+        }
+        while(!titles.isEmpty()) {
+            favoriteVideos.put(titles.get(titles.size() - 1), values.get(values.size() - 1));
+            titles.remove(titles.size() - 1);
+            values.remove(values.size() - 1);
+        }
+        Map<String, Integer> sortedFavorites = favoriteVideos.entrySet().stream().sorted(Map.Entry.comparingByValue()).collect
+                (Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new ));
+        List<String> favorites = new ArrayList<>();
+        for(Map.Entry<String, Integer> entry : sortedFavorites.entrySet()) {
+            favorites.add(entry.getKey());
+        }
+        for (User user : usersData) {
+            if (user.getUsername().equals(username)) {
+                if(user.getSubscriptionType().equals("BASIC")) {
+                    return result;
+                }
+                int index = favorites.size() - 1;
+                while (index != -1) {
+                    if(!user.getHistory().containsKey(favorites.get(index))) {
+                        result = favorites.get(index);
+                        return result;
+                    }
+                    index--;
+                }
+            }
+        }
+        return result;
+    }
+
+    public List<String> search(String username, String genre) {
+        List<String> result = new ArrayList<>();
+        TreeMap<String, Double> videoRatings = new TreeMap<>();
+        for (Movie movie : moviesData) {
+            double movieRating = 0;
+            for (Double rating : movie.getRatings()) {
+                movieRating += rating;
+            }
+            if (movieRating != 0) {
+                movieRating /= movie.getRatings().size();
+            }
+            if (movie.getGenres().contains(genre)) {
+                videoRatings.put(movie.getTitle(), movieRating);
+            }
+        }
+        for (Serial serial : serialsData) {
+            double serialRating = 0;
+            for (Season season : serial.getSeasons()) {
+                double seasonRating = 0;
+                for (double rating : season.getRatings()) {
+                    seasonRating += rating;
+                }
+                if (seasonRating != 0) {
+                    seasonRating /= season.getRatings().size();
+                }
+                serialRating += seasonRating;
+            }
+            if (serial.getGenres().contains(genre)) {
+                videoRatings.put(serial.getTitle(), serialRating / serial.getNumberSeason());
+            }
+        }
+        Map<String, Double> sortedRatings = videoRatings.entrySet().stream().sorted(Map.Entry.comparingByValue()).collect
+                (Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new ));
+        List<String> sortedVideos = new ArrayList<>();
+        for(Map.Entry<String, Double> entry : sortedRatings.entrySet()) {
+            sortedVideos.add(entry.getKey());
+        }
+        for (User user : usersData) {
+            if(user.getUsername().equals(username)) {
+                if(user.getSubscriptionType().equals("BASIC")) {
+                    return result;
+                }
+                int index = 0;
+                while(index != sortedVideos.size()) {
+                    if(!user.getHistory().containsKey(sortedVideos.get(index))) {
+                        result.add(sortedVideos.get(index));
+                    }
+                    index++;
+                }
             }
         }
         return result;
