@@ -3,7 +3,7 @@ package data;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class Movie extends Show{
+public final class Movie extends Show {
     private final int duration;
 
     private List<Double> ratings;
@@ -16,13 +16,19 @@ public final class Movie extends Show{
         this.ratings = new ArrayList<>();
     }
 
-    public List<Double> getRatings() { return ratings; }
+    public List<Double> getRatings() {
+        return ratings;
+    }
 
     public int getDuration() {
         return duration;
     }
 
-    public void addRating(double rating) {
+    /**
+     *
+     * @param rating
+     */
+    public void addRating(final double rating) {
         this.ratings.add(rating);
     }
 

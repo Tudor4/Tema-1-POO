@@ -45,11 +45,15 @@ public final class User {
         return favoriteMovies;
     }
 
-    public ArrayList<String> getRatedTitles() { return ratedTitles;}
+    public ArrayList<String> getRatedTitles() {
+        return ratedTitles;
+    }
 
-    public int getNumberOfRatings() { return numberOfRatings; }
+    public int getNumberOfRatings() {
+        return numberOfRatings;
+    }
 
-    public void setNumberOfRatings(int numberOfRatings) {
+    public void setNumberOfRatings(final int numberOfRatings) {
         this.numberOfRatings = numberOfRatings;
     }
 
@@ -62,9 +66,14 @@ public final class User {
                 + favoriteMovies + '}';
     }
 
-    public int addFavorite (String title) {
-        for (String movie_title : favoriteMovies) {
-            if (movie_title.equals(title)) {
+    /**
+     *
+     * @param title
+     * @return
+     */
+    public int addFavorite(final String title) {
+        for (String movieTitle : favoriteMovies) {
+            if (movieTitle.equals(title)) {
                 return 0;
             }
         }
@@ -76,7 +85,12 @@ public final class User {
         return 2;
     }
 
-    public int addView (String title) {
+    /**
+     *
+     * @param title
+     * @return
+     */
+    public int addView(final String title) {
         int nrViews = history.getOrDefault(title, 0);
         if (nrViews != 0) {
             nrViews++;
@@ -88,14 +102,24 @@ public final class User {
         return nrViews;
     }
 
-    public int isSeen (String title) {
+    /**
+     *
+     * @param title
+     * @return
+     */
+    public int isSeen(final String title) {
         if (history.containsKey(title)) {
             return 1;
         }
         return 0;
     }
 
-    public boolean isRated (String title) {
+    /**
+     *
+     * @param title
+     * @return
+     */
+    public boolean isRated(final String title) {
         if (ratedTitles.contains(title)) {
             return true;
         }

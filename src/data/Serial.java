@@ -4,7 +4,7 @@ import entertainment.Season;
 
 import java.util.ArrayList;
 
-public final class Serial extends Show{
+public final class Serial extends Show {
     private final int numberOfSeasons;
     private final ArrayList<Season> seasons;
 
@@ -25,7 +25,12 @@ public final class Serial extends Show{
         return seasons;
     }
 
-    public void addRating(double rating, int seasonNumber) {
+    /**
+     *
+     * @param rating
+     * @param seasonNumber
+     */
+    public void addRating(final double rating, final int seasonNumber) {
         Season season = seasons.get(seasonNumber - 1);
         season.getRatings().add(rating);
     }

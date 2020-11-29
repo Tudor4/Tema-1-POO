@@ -78,26 +78,26 @@ public final class Main {
 
         //TODO add here the entry point to your implementation
 
-        List<Actor> actors = new ArrayList<>();
+        List<Actor> actors = new ArrayList<>();       // listele in care vor fi stocate datele
         List<Movie> movies = new ArrayList<>();
         List<Serial> serials = new ArrayList<>();
         List<User> users = new ArrayList<>();
 
         for (ActorInputData actor : input.getActors()) {
-            Actor actor2 = new Actor(actor.getName(), actor.getCareerDescription(), actor.getFilmography(),
-                                     actor.getAwards());
+            Actor actor2 = new Actor(actor.getName(), actor.getCareerDescription(),
+                    actor.getFilmography(), actor.getAwards());
             actors.add(actor2);
         }
 
         for (MovieInputData movie : input.getMovies()) {
-            Movie movie2 = new Movie(movie.getTitle(), movie.getCast(), movie.getGenres(), movie.getYear(),
-                                     movie.getDuration());
+            Movie movie2 = new Movie(movie.getTitle(), movie.getCast(), movie.getGenres(),
+                    movie.getYear(), movie.getDuration());
             movies.add(movie2);
         }
 
         for (SerialInputData serial : input.getSerials()) {
             Serial serial2 = new Serial(serial.getTitle(), serial.getCast(), serial.getGenres(),
-                                        serial.getNumberSeason(), serial.getSeasons(), serial.getYear());
+                    serial.getNumberSeason(), serial.getSeasons(), serial.getYear());
             serials.add(serial2);
         }
 
@@ -110,10 +110,10 @@ public final class Main {
         Data data = new Data(actors, users, movies, serials);
         JSONObject object;
 
-        for (ActionInputData command : input.getCommands()) {
-            if (command.getActionType().equals("command")) {
-                if (command.getType().equals("favorite")) {
-                    for (User user : data.getUsers()) {
+        for (ActionInputData command : input.getCommands()) {                   // scheletul programului
+            if (command.getActionType().equals("command")) {                    // se determina ce tip de comanda este,
+                if (command.getType().equals("favorite")) {                     // se apeleaza metoda corespunzatoare
+                    for (User user : data.getUsers()) {                         // si se afiseaza mesajul
                         if (user.getUsername().equals(command.getUsername())) {
                             int result = user.addFavorite(command.getTitle());
                             if (result == 0) {
@@ -123,7 +123,8 @@ public final class Main {
                                 object = fileWriter.writeFile(command.getActionId(), "", "error -> "
                                         + command.getTitle() + " is not seen");
                             } else {
-                                object = fileWriter.writeFile(command.getActionId(), "", "success -> "
+                                object = fileWriter.writeFile(command.getActionId(), "",
+                                        "success -> "
                                         + command.getTitle() + " was added as favourite");
                             }
                             arrayResult.add(object);
@@ -133,8 +134,9 @@ public final class Main {
                     for (User user : data.getUsers()) {
                         if (user.getUsername().equals(command.getUsername())) {
                             int result = user.addView((command.getTitle()));
-                            object = fileWriter.writeFile(command.getActionId(), "", "success -> "
-                                    + command.getTitle() + " was viewed with total views of " + result);
+                            object = fileWriter.writeFile(command.getActionId(), "",
+                                    "success -> " + command.getTitle()
+                                            + " was viewed with total views of " + result);
                             arrayResult.add(object);
                         }
                     }
@@ -149,12 +151,17 @@ public final class Main {
                                             if (!user.isRated(movie.getTitle())) {
                                                 user.getRatedTitles().add(movie.getTitle());
                                                 movie.addRating(command.getGrade());
-                                                object = fileWriter.writeFile(command.getActionId(), "", "success -> "
-                                                        + command.getTitle() + " was rated with " + command.getGrade() + " by "
+                                                object = fileWriter.writeFile(command.getActionId(),
+                                                        "", "success -> "
+                                                        + command.getTitle()
+                                                                + " was rated with "
+                                                                + command.getGrade()
+                                                                + " by "
                                                         + command.getUsername());
                                             } else {
-                                                object = fileWriter.writeFile(command.getActionId(), "", "error -> "
-                                                        + command.getTitle() + " has been already rated");
+                                                object = fileWriter.writeFile(command.getActionId(),
+                                                        "", "error -> " + command.getTitle()
+                                                                + " has been already rated");
                                             }
                                             arrayResult.add(object);
                                         }
@@ -162,15 +169,24 @@ public final class Main {
                                 } else {
                                     for (Serial serial : data.getSerials()) {
                                         if (serial.getTitle().equals(command.getTitle())) {
-                                            if (!user.isRated(serial.getTitle() + command.getSeasonNumber())) {
-                                                user.getRatedTitles().add(serial.getTitle() + command.getSeasonNumber());
-                                                serial.addRating(command.getGrade(), command.getSeasonNumber());
-                                                object = fileWriter.writeFile(command.getActionId(), "", "success -> "
-                                                        + command.getTitle() + " was rated with " + command.getGrade() + " by "
+                                            if (!user.isRated(serial.getTitle()
+                                                    + command.getSeasonNumber())) {
+                                                user.getRatedTitles().add(serial.getTitle()
+                                                        + command.getSeasonNumber());
+                                                serial.addRating(command.getGrade(),
+                                                        command.getSeasonNumber());
+                                                object = fileWriter.writeFile(command.getActionId(),
+                                                        "", "success -> "
+                                                        + command.getTitle()
+                                                                + " was rated with "
+                                                                + command.getGrade()
+                                                                + " by "
                                                         + command.getUsername());
                                             } else {
-                                                object = fileWriter.writeFile(command.getActionId(), "", "error -> "
-                                                        + command.getTitle() + " has been already rated");
+                                                object = fileWriter.writeFile(command.getActionId(),
+                                                        "", "error -> "
+                                                        + command.getTitle()
+                                                                + " has been already rated");
                                             }
                                             arrayResult.add(object);
                                         }
@@ -188,48 +204,60 @@ public final class Main {
             } else if (command.getActionType().equals("query")) {
                 if (command.getObjectType().equals("actors")) {
                     if (command.getCriteria().equals("average")) {
-                        List<String> result = data.average(command.getNumber(), command.getSortType());
+                        List<String> result = data.average(command.getNumber(),
+                                command.getSortType());
                         object = fileWriter.writeFile(command.getActionId(), "", "Query result: "
                                 + result);
                         arrayResult.add(object);
                     } else if (command.getCriteria().equals("awards")) {
-                        List<String> result = data.awards(command.getFilters().get(3), command.getSortType());
+                        List<String> result = data.awards(command.getFilters().get(3),
+                                command.getSortType());
                         object = fileWriter.writeFile(command.getActionId(), "", "Query result: "
                                 + result);
                         arrayResult.add(object);
                     } else {
-                        List<String> result = data.filterDescription(command.getFilters().get(2), command.getSortType());
+                        List<String> result = data.filterDescription(command.getFilters().get(2),
+                                command.getSortType());
                         object = fileWriter.writeFile(command.getActionId(), "", "Query result: "
                                 + result);
                         arrayResult.add(object);
                     }
                 } else if (command.getObjectType().equals("users")) {
-                    List<String> result = data.userQuery(command.getNumber(), command.getSortType());
+                    List<String> result = data.userQuery(command.getNumber(),
+                            command.getSortType());
                     object = fileWriter.writeFile(command.getActionId(), "", "Query result: "
                             + result);
                     arrayResult.add(object);
                 } else {
                     if (command.getCriteria().equals("ratings")) {
-                        List<String> result = data.ratingQuery(command.getNumber(), command.getFilters().get(0),
-                                command.getFilters().get(1), command.getSortType(), command.getObjectType());
+                        List<String> result = data.ratingQuery(command.getNumber(),
+                                command.getFilters().get(0),
+                                command.getFilters().get(1), command.getSortType(),
+                                command.getObjectType());
                         object = fileWriter.writeFile(command.getActionId(), "", "Query result: "
                                 + result);
                         arrayResult.add(object);
                     } else if (command.getCriteria().equals("favorite")) {
-                        List<String> result = data.favorite(command.getNumber(), command.getFilters().get(0),
-                                command.getFilters().get(1), command.getSortType(), command.getObjectType());
+                        List<String> result = data.favorite(command.getNumber(),
+                                command.getFilters().get(0),
+                                command.getFilters().get(1), command.getSortType(),
+                                command.getObjectType());
                         object = fileWriter.writeFile(command.getActionId(), "", "Query result: "
                                 + result);
                         arrayResult.add(object);
                     } else if (command.getCriteria().equals("most_viewed")) {
-                        List<String> result = data.mostViewed(command.getNumber(), command.getFilters().get(0),
-                                command.getFilters().get(1), command.getSortType(), command.getObjectType());
+                        List<String> result = data.mostViewed(command.getNumber(),
+                                command.getFilters().get(0),
+                                command.getFilters().get(1), command.getSortType(),
+                                command.getObjectType());
                         object = fileWriter.writeFile(command.getActionId(), "", "Query result: "
                                 + result);
                         arrayResult.add(object);
                     } else {
-                        List<String> result = data.longest(command.getNumber(), command.getFilters().get(0),
-                                command.getFilters().get(1), command.getSortType(), command.getObjectType());
+                        List<String> result = data.longest(command.getNumber(),
+                                command.getFilters().get(0),
+                                command.getFilters().get(1), command.getSortType(),
+                                command.getObjectType());
                         object = fileWriter.writeFile(command.getActionId(), "", "Query result: "
                                 + result);
                         arrayResult.add(object);
@@ -290,7 +318,6 @@ public final class Main {
                 }
             }
         }
-
         fileWriter.closeJSON(arrayResult);
     }
 }
