@@ -55,3 +55,4 @@ Mentiuni:
 
     -> Metoda action din main are mai mult de 150 de linii, insa aceasta reprezinta scheletul 	temei si nu  am stiu cum sa o fac sa se incadreze in aceasta limita.     	
     
+    -> Link repository: https://github.com/Tudor4/Tema-1-POO.git
